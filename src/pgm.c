@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <math.h>
+#include <float.h>
 #include "pgm.h"
 
 #define min(a, b) (((a) < (b)) ? (a) : (b))
@@ -328,150 +329,52 @@ void maximumFilter(PGMData *data, int N)
     }
 }
 
-PGMData* sobelX(PGMData *data)
+PGMData* sobel(PGMData *data)
 {
-    int sobelX[3][3] = {
-            {1, 0, -1},
-            {2, 0, -2},
-            {1, 0, -1}
-    };
+//    int sobelX[3][3] = {
+//            {1, 0, -1},
+//            {2, 0, -2},
+//            {1, 0, -1}
+//    };
+//
+//    int sobelY[3][3] = {
+//            {1, 2, 1},
+//            {0, 0, 0},
+//            {-1, -2, -1}
+//    };
+
 
     float valX = 0;
-    float scale;
-    float newPixel;
-
-    int oldmin = 0;
-    int oldmax = 950;
-    int oldrange = oldmax - oldmin;
-
-    int newmin = 0;
-    int newmax = 255;
-    int newrange = newmax - newmin;
-
-    float **sobelX_filtered_matrix;
-    sobelX_filtered_matrix = mem_alloc(data->row, data->col);
-    for (int i = 0; i < data->row; i++) {
-        for (int j = 0; j < data->col; j++) {
-            sobelX_filtered_matrix[i][j] = 0;
-        }
-    }
-
-    for (int i = 1; i < data->row - 1; i++) {
-        for (int j = 1; j < data->col - 1; j++) {
-            valX = 0;
-            for (int k = -1; k <= 1; k++) {
-                for (int l = -1; l <= -1; l++) {
-                    valX = valX + data->pixel_matrix[i + k][j + l] * sobelX[1 + k][1 + l];
-                }
-            }
-            scale = valX / oldrange;
-            newPixel = (newrange * scale) + newmin;
-
-            sobelX_filtered_matrix[i][j] = newPixel;
-            if (sobelX_filtered_matrix[i][j] < 0)
-                sobelX_filtered_matrix[i][j] = 0;
-            else if (sobelX_filtered_matrix[i][j] > 255)
-                sobelX_filtered_matrix[i][j] = 255;
-        }
-    }
-
-    for (int i = 0; i < data->row; i++) {
-        for (int j = 0; j < data->col; j++) {
-            data->pixel_matrix[i][j] = sobelX_filtered_matrix[i][j];
-        }
-    }
-
-    return data;
-}
-
-PGMData* sobelY(PGMData *data)
-{
-    int sobelY[3][3] = {
-            {1, 2, 1},
-            {0, 0, 0},
-            {-1, -2, -1}
-    };
-
     float valY = 0;
-    float scale;
-    float newPixel;
 
-    int oldmin = -174;
-    int oldmax = 237;
-    int oldrange = oldmax - oldmin;
-
-    int newmin = 0;
-    int newmax = 255;
-    int newrange = newmax - newmin;
-
-    float **sobelY_filtered_matrix;
-    sobelY_filtered_matrix = mem_alloc(data->row, data->col);
+    float **sobel_filtered_matrix;
+    sobel_filtered_matrix = mem_alloc(data->row, data->col);
     for (int i = 0; i < data->row; i++) {
         for (int j = 0; j < data->col; j++) {
-            sobelY_filtered_matrix[i][j] = 0;
+            sobel_filtered_matrix[i][j] = 0;
         }
     }
 
     for (int i = 1; i < data->row - 1; i++) {
         for (int j = 1; j < data->col - 1; j++) {
-            valY = 0;
-            for (int k = -1; k <= 1; k++) {
-                for (int l = -1; l <= -1; l++) {
-                    valY = valY + data->pixel_matrix[i + k][j + l] * sobelY[1 + k][1 + l];
-                }
-            }
+            valX = (data->pixel_matrix[i-1][j+1]+2 * data->pixel_matrix[i][j+1] + data->pixel_matrix[i+1][j+1]) -
+                   (data->pixel_matrix[i-1][j-1]+2 * data->pixel_matrix[i][j-1] + data->pixel_matrix[i+1][j-1]);
 
-            scale = valY / oldrange;
-            newPixel = (newrange * scale) + newmin;
+            valY = (data->pixel_matrix[i+1][j-1]+2 * data->pixel_matrix[i+1][j] + data->pixel_matrix[i+1][j+1]) -
+                   (data->pixel_matrix[i-1][j-1]+2 * data->pixel_matrix[i-1][j] + data->pixel_matrix[i-1][j+1]);
 
-            sobelY_filtered_matrix[i][j] = newPixel;
-            if (sobelY_filtered_matrix[i][j] < 0)
-                sobelY_filtered_matrix[i][j] = 0;
-            else if (sobelY_filtered_matrix[i][j] > 255)
-                sobelY_filtered_matrix[i][j] = 255;
+            // magnitude + normalization
+            sobel_filtered_matrix[i][j] = 255 * sqrtf((valX * valX) + (valY * valY)) / 950;
         }
     }
 
     for (int i = 0; i < data->row; i++) {
         for (int j = 0; j < data->col; j++) {
-            data->pixel_matrix[i][j] = sobelY_filtered_matrix[i][j];
+            data->pixel_matrix[i][j] = sobel_filtered_matrix[i][j];
         }
     }
 
     return data;
-}
-
-PGMData* magnitudeFilter(PGMData* sobelx, PGMData* sobely)
-{
-    float gx = 0;
-    float gy = 0;
-
-    int pixel;
-
-    float **magnitude_filtered_matrix = mem_alloc(sobelx->row, sobelx->col);
-    for (int i = 0; i < sobelx->row; ++i) {
-        for (int j = 0; j < sobelx->col; ++j) {
-            magnitude_filtered_matrix[i][j] = 0;
-        }
-    }
-
-    for (int i = 0; i < sobelx->row; ++i) {
-        for (int j = 0; j < sobelx->col; ++j) {
-            gx = sobelx->pixel_matrix[i][j];
-            gy = sobely->pixel_matrix[i][j];
-            pixel = (int)(sqrt(gx * gx + gy * gy));
-
-            magnitude_filtered_matrix[i][j] = pixel;
-        }
-    }
-
-    for (int i = 0; i < sobelx->row; ++i) {
-        for (int j = 0; j < sobelx->col; ++j) {
-            sobelx->pixel_matrix[i][j] = magnitude_filtered_matrix[i][j];
-        }
-    }
-
-    return sobelx;
 }
 
 PGMData* threshFilter(PGMData* data)

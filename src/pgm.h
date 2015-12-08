@@ -25,9 +25,7 @@ void medianFilter(PGMData *data, int N);
 void maximumFilter(PGMData *data, int N);
 
 // P4
-PGMData* sobelX(PGMData *data);
-PGMData* sobelY(PGMData *data);
-PGMData* magnitudeFilter(PGMData* sobelx, PGMData* sobely);
+PGMData* sobel(PGMData *data);
 PGMData* threshFilter(PGMData* data);
 
 #endif //PRAKTIKUM2_PGM_H

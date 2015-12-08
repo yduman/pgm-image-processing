@@ -38,23 +38,18 @@ int main(int argc, char *argv[])
 
    // Sobel PGM
    puts("Processing with Sobel-Filter ...");
-   PGMData* sobel_x = sobelX(blurred);
-   PGMData* sobel_y = sobelY(blurred);
+   PGMData* sobel_x = sobel(blurred);
    puts("[+] Finished Sobel-Processing!");
-
-   // Magnitude
-   puts("Calculating magnitude ...");
-   PGMData* magFiltered = magnitudeFilter(sobel_x, sobel_y);
-   puts("[+] Finished calculating magnitude!");
-
-   // Threshold
-   puts("Removing all edges under threshold ...");
-   PGMData* thresh = threshFilter(magFiltered);
-   puts("[+] Finished removing edges under threshold!");
+   
+//
+//   // Threshold
+//   puts("Removing all edges under threshold ...");
+//   PGMData* thresh = threshFilter(magFiltered);
+//   puts("[+] Finished removing edges under threshold!");
 
    // Write PGM
    puts("Writing PGM ...");
-   writeFile(argv[2], sobel_y);
+   writeFile(argv[2], sobel_x);
    puts("[+] Finished Writing PGM!");
 
    puts("[+] Finished Canny-Edge-Detection!");
