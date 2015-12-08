@@ -44,17 +44,17 @@ int main(int argc, char *argv[])
 
    // Magnitude
    puts("Calculating magnitude ...");
-   PGMData*magFiltered = magnitudeFilter(sobel_x, sobel_y);
+   PGMData* magFiltered = magnitudeFilter(sobel_x, sobel_y);
    puts("[+] Finished calculating magnitude!");
 
    // Threshold
-   puts("Removing all edges under threshold");
+   puts("Removing all edges under threshold ...");
    PGMData* thresh = threshFilter(magFiltered);
    puts("[+] Finished removing edges under threshold!");
 
    // Write PGM
    puts("Writing PGM ...");
-   writeFile(argv[2], thresh);
+   writeFile(argv[2], sobel_y);
    puts("[+] Finished Writing PGM!");
 
    puts("[+] Finished Canny-Edge-Detection!");

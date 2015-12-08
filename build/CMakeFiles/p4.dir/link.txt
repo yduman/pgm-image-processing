@@ -1,0 +1,1 @@
+/usr/bin/cc  -std=c11    CMakeFiles/p4.dir/src/p4.o CMakeFiles/p4.dir/src/pgm.o  -o ../bin/p4 -rdynamic -lm 
