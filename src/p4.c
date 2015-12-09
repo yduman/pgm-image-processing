@@ -24,39 +24,32 @@ int main(int argc, char *argv[])
    PGMData *data = &pgm_data;
 
    // Read PGM
-   puts("Reading PGM ...");
    PGMData *read = readFile(argv[1], data);
    puts("[+] Finished Reading PGM!");
 
-   // Canny-Processing
-   puts("Processing with Canny-Edge-Detection ...");
-
    // Blur PGM
-   puts("Blurring PGM ...");
    PGMData* blurred = blur(read);
    puts("[+] Finished Blurring PGM!");
 
    // Sobel PGM
-   puts("Processing with Sobel-Filter ...");
-   PGMData* sobeled = sobel(blurred);
+   PGMData* gx = sobel(blurred);
    puts("[+] Finished Sobel-Processing!");
 
    // Threshold
-   puts("Processing with Threshold-Filter ...");
-   PGMData* thresh = threshFilter(sobeled);
+   PGMData* thresh = threshFilter(gx);
    puts("[+] Finished Threshold-Processing!");
 
    // Directions
-   puts("Processing with Direction-Filter ...");
    PGMData* dir = directionFilter(thresh);
    puts("[+] Finished Direction-Processing!");
 
-   // Write PGM
-   puts("Writing PGM ...");
-   writeFile(argv[2], dir);
-   puts("[+] Finished Writing PGM!");
+   // NMS
+   PGMData* nms = NMS(thresh, dir->pixel_matrix);
+   puts("[+] Finished NMS-Processing");
 
-   puts("[+] Finished Canny-Edge-Detection!");
+   // Write PGM
+   writeFile(argv[2], nms);
+   puts("[+] Finished Writing PGM!");
 
    return 0;
 }

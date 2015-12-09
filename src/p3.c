@@ -30,32 +30,26 @@ int main(int argc, char *argv[])
    PGMData *data2 = &pgm_med;
    PGMData *data3 = &pgm_max;
 
-   puts("Reading PGM ...");
    readFile(data_path, data1);
-   puts("[+] Finished Reading PGM!");
+   puts("[+] Finished Reading PGM for Minimum-Filter!");
 
-   puts("Processing with Minimum-Filter ...");
    minimumFilter(data1, atoi(N));
    writeFile(min_path, data1);
-   puts("[+] Finished processing!");
+   puts("[+] Finished Minimum-Filter-Processing!");
 
-   puts("Reading PGM ...");
    readFile(data_path, data2);
-   puts("[+] Finished Reading PGM!");
+   puts("[+] Finished Reading PGM for Median-Filter!");
 
-   puts("Processing with Median-Filter ...");
    medianFilter(data2, atoi(N));
    writeFile(med_path, data2);
-   puts("[+] Finished processing!");
+   puts("[+] Finished Median-Filter-Processing!");
 
-   puts("Reading PGM ...");
    readFile(data_path, data3);
-   puts("[+] Finished Reading PGM!");
+   puts("[+] Finished Reading PGM for Maximum-Filter!");
 
-   puts("Processing with Maximum-Filter ...");
    maximumFilter(data3, atoi(N));
    writeFile(max_path, data3);
-   puts("[+] Finished processing!");
+   puts("[+] Finished Maximum-Filter-Processing!");
 
    return 0;
 }

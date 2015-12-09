@@ -32,20 +32,16 @@ int main(int argc, char *argv[])
    PGMData *data = &pgm_data;
    PGMData *data2 = &pgm_data2;
 
-   puts("Reading PGM ...");
    readFile(data_path, data);
-   puts("[+] Finished Reading PGM!");
+   puts("[+] Finished Reading PGM for Blurring!");
 
-   puts("Blurring PGM ...");
    blur(data);
    writeFile(blur_path, data);
    puts("[+] Finished Blurring PGM!");
 
-   puts("Reading PGM ...");
    readFile(data_path, data2);
-   puts("[+] Finished Reading PGM!");
+   puts("[+] Finished Reading PGM for Sharpening!");
 
-   puts("Sharpening PGM ...");
    sharpen(data2);
    writeFile(shar_path, data2);
    puts("[+] Finished Sharpening PGM!");

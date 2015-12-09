@@ -2,16 +2,16 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <math.h>
-#include <float.h>
 #include "pgm.h"
 
 #define min(a, b) (((a) < (b)) ? (a) : (b))
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 
-/**
- * Autoren: Yildiz Kasimay, Artjom Poljakow, Yadullah Duman
- */
+/* Autoren: Yildiz Kasimay, Artjom Poljakow, Yadullah Duman */
 
+/**
+ *  dient der Speicherallokation
+ */
 float **mem_alloc(int row, int col) {
     float **ret;
 
@@ -31,6 +31,9 @@ float **mem_alloc(int row, int col) {
     return ret;
 }
 
+/**
+ *  dient der Speicherfreigabe
+ */
 void destroy(float **pixel_matrix, int row) {
     for (int i = 0; i < row; i++) {
         free(pixel_matrix[i]);
@@ -38,6 +41,9 @@ void destroy(float **pixel_matrix, int row) {
     free(pixel_matrix);
 }
 
+/**
+ *  Kommentare in der PGM werden ignoriert
+ */
 void ignoreComments(FILE *fp) {
     int c;
     char line[1000];
@@ -52,6 +58,9 @@ void ignoreComments(FILE *fp) {
     }
 }
 
+/**
+ *  das Lesen der PGM
+ */
 PGMData* readFile(const char *filename, PGMData *data) {
     FILE *fp;
     char magic[3];
@@ -86,6 +95,9 @@ PGMData* readFile(const char *filename, PGMData *data) {
     return data;
 }
 
+/**
+ *  das Schreiben der PGM
+ */
 void writeFile(const char *filename, const PGMData *data) {
     FILE *fp;
 
@@ -115,6 +127,9 @@ void writeFile(const char *filename, const PGMData *data) {
     destroy(data->pixel_matrix, data->row);
 }
 
+/**
+ *  Blurring der PGM
+ */
 PGMData* blur(PGMData *data)
 {
     float kernel[3][3] = {
@@ -133,6 +148,7 @@ PGMData* blur(PGMData *data)
         }
     }
 
+    // Prozess des Blurrings
     for (int i = 1; i < data->row - 1; i++) {
         for (int j = 1; j < data->col - 1; j++) {
             sum = 0;
@@ -141,6 +157,7 @@ PGMData* blur(PGMData *data)
                     sum = sum + data->pixel_matrix[i + k][j + l] * kernel[1 + k][1 + l];
                 }
             }
+
             blurred_matrix[i][j] = sum;
             if (blurred_matrix[i][j] < 0)
                 blurred_matrix[i][j] = 0;
@@ -158,6 +175,9 @@ PGMData* blur(PGMData *data)
     return data;
 }
 
+/**
+ *  das Schaerfen der PGM
+ */
 PGMData* sharpen(PGMData *data)
 {
     int kernel[3][3] = {
@@ -176,6 +196,7 @@ PGMData* sharpen(PGMData *data)
         }
     }
 
+    // sharpening Prozess
     for (int i = 1; i < data->row - 1; i++) {
         for (int j = 1; j < data->col - 1; j++) {
             sum = 0;
@@ -201,6 +222,9 @@ PGMData* sharpen(PGMData *data)
     return data;
 }
 
+/**
+ *  Minimum-Filter
+ */
 void minimumFilter(PGMData *data, int N)
 {
     float minval;
@@ -213,6 +237,7 @@ void minimumFilter(PGMData *data, int N)
         }
     }
 
+    // Filter-Prozess
     for (int i = N / 2; i < data->row - N / 2; i++) {
         for (int j = N / 2; j < data->col - N / 2; j++) {
             minval = data->pixel_matrix[i][j];
@@ -236,6 +261,9 @@ void minimumFilter(PGMData *data, int N)
     }
 }
 
+/**
+ *  Median-Filter
+ */
 void medianFilter(PGMData *data, int N)
 {
     int counter = 0;
@@ -254,6 +282,7 @@ void medianFilter(PGMData *data, int N)
         }
     }
 
+    // Filter-Prozess
     for (int i = N / 2; i < data->row - N / 2; i++) {
         for (int j = N / 2; j < data->col - N / 2; j++) {
             counter = 0;
@@ -294,6 +323,9 @@ void medianFilter(PGMData *data, int N)
     }
 }
 
+/**
+ *  Maximum-Filter
+ */
 void maximumFilter(PGMData *data, int N)
 {
     float maxval;
@@ -306,6 +338,7 @@ void maximumFilter(PGMData *data, int N)
         }
     }
 
+    // Filter-Prozess
     for (int i = N / 2; i < data->row - N / 2; i++) {
         for (int j = N / 2; j < data->col - N / 2; j++) {
             maxval = data->pixel_matrix[i][j];
@@ -329,6 +362,9 @@ void maximumFilter(PGMData *data, int N)
     }
 }
 
+/**
+ *  Sobel-Operation + Kantenstaerke-Operation
+ */
 PGMData* sobel(PGMData *data)
 {
     float valX = 0;
@@ -342,6 +378,7 @@ PGMData* sobel(PGMData *data)
         }
     }
 
+    // sobel
     for (int i = 1; i < data->row - 1; i++) {
         for (int j = 1; j < data->col - 1; j++) {
             valX = (data->pixel_matrix[i-1][j+1]+2 * data->pixel_matrix[i][j+1] + data->pixel_matrix[i+1][j+1]) -
@@ -365,6 +402,9 @@ PGMData* sobel(PGMData *data)
     return data;
 }
 
+/**
+ *  Thresholding
+ */
 PGMData* threshFilter(PGMData* data)
 {
     for (int i = 0; i < data->row; ++i) {
@@ -378,9 +418,12 @@ PGMData* threshFilter(PGMData* data)
     return data;
 }
 
+/**
+ *  Richtung der Kanten
+ */
 PGMData* directionFilter(PGMData* data)
 {
-    float val;
+    float atan;
 
     float **direction_filtered_matrix;
     direction_filtered_matrix = mem_alloc(data->row, data->col);
@@ -392,8 +435,8 @@ PGMData* directionFilter(PGMData* data)
 
     for (int i = 0; i < data->row; ++i) {
         for (int j = 0; j < data->col; ++j) {
-            val = atanf(data->pixel_matrix[i][j]);
-            direction_filtered_matrix[i][j] = val;
+            atan = atanf(data->pixel_matrix[i][j]);
+            direction_filtered_matrix[i][j] = atan;
         }
     }
 
@@ -406,4 +449,64 @@ PGMData* directionFilter(PGMData* data)
     data->max_greyscale = 1;
 
     return data;
+}
+
+/**
+ *  non-maximum-suppression
+ */
+PGMData* NMS(PGMData* mag_matrix, float** dir_matrix)
+{
+    // Matrix erstellen
+    float **NMS_matrix = mem_alloc(mag_matrix->row, mag_matrix->col);
+    for (int i = 0; i < mag_matrix->row; ++i) {
+        for (int j = 0; j < mag_matrix->col; ++j) {
+            NMS_matrix[i][j] = 0;
+        }
+    }
+
+    // non-maximum suppression
+    for (int i = 1; i < mag_matrix->row - 1; ++i) {
+        for (int j = 1; j < mag_matrix->col - 1; ++j) {
+            float t = dir_matrix[i][j];
+            if(t > 67.5 && t <= 90 || t >= -90 && t <= -67.5) {
+                if (mag_matrix->pixel_matrix[i - 1][j] > mag_matrix->pixel_matrix[i][j]
+                    || mag_matrix->pixel_matrix[i + 1][j] > mag_matrix->pixel_matrix[i][j]) {
+                    NMS_matrix[i][j] = 0;
+                }
+                else NMS_matrix[i][j] = mag_matrix->pixel_matrix[i][j];
+
+            }
+            if(t > -22.5 && t <= 22.5) {
+                if (mag_matrix->pixel_matrix[i][j - 1] > mag_matrix->pixel_matrix[i][j]
+                    || mag_matrix->pixel_matrix[i][j + 1] > mag_matrix->pixel_matrix[i][j]) {
+                    NMS_matrix[i][j] = 0;
+                }
+                else NMS_matrix[i][j] = mag_matrix->pixel_matrix[i][j];
+            }
+            if(t > 22.5 && t <= 67.5) {
+                if (mag_matrix->pixel_matrix[i - 1][j - 1] > mag_matrix->pixel_matrix[i][j]
+                    || mag_matrix->pixel_matrix[i + 1][j + 1] > mag_matrix->pixel_matrix[i][j]) {
+                    NMS_matrix[i][j] = 0;
+                }
+                else NMS_matrix[i][j] = mag_matrix->pixel_matrix[i][j];
+            }
+            if(t > 67.5 && t <= 90 || t >= -90 && t <= -67.5) {
+                if (mag_matrix->pixel_matrix[i - 1][j + 1] > mag_matrix->pixel_matrix[i][j]
+                    || mag_matrix->pixel_matrix[i + 1][j - 1] > mag_matrix->pixel_matrix[i][j]) {
+                    NMS_matrix[i][j] = 0;
+                }
+                else NMS_matrix[i][j] = mag_matrix->pixel_matrix[i][j];
+            }
+        }
+    }
+
+    // G_matrix zu T_matrix aktualisieren
+    for (int i = 0; i < mag_matrix->row; ++i) {
+        for (int j = 0; j < mag_matrix->col; ++j) {
+            mag_matrix->pixel_matrix[i][j] = dir_matrix[i][j];
+        }
+    }
+
+    // G_matrix = T_matrix
+    return mag_matrix;
 }

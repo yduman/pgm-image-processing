@@ -28,5 +28,6 @@ void maximumFilter(PGMData *data, int N);
 PGMData* sobel(PGMData *data);
 PGMData* threshFilter(PGMData* data);
 PGMData* directionFilter(PGMData* data);
+PGMData* NMS(PGMData* mag_matrix, float** dir_matrix);
 
 #endif //PRAKTIKUM2_PGM_H

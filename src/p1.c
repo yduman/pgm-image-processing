@@ -18,11 +18,9 @@ int main(int argc, char *argv[])
    PGMData pgm_data;
    PGMData *data = &pgm_data;
 
-   puts("Reading PGM ...");
    readFile(data_path, data);
    puts("[+] Finished Reading PGM!");
 
-   puts("Writing PGM ...");
    writeFile(dest_path, data);
    puts("[+] Finished Writing PGM!");
 }

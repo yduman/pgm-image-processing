@@ -6,6 +6,14 @@
 
 #IncludeRegexTransform: 
 
+/home/prox/Schreibtisch/Praktikum2/src/p3.c
+stdio.h
+-
+stdlib.h
+-
+pgm.h
+/home/prox/Schreibtisch/Praktikum2/src/pgm.h
+
 /home/prox/Schreibtisch/Praktikum2/src/pgm.c
 stdio.h
 -
