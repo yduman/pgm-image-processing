@@ -31,22 +31,16 @@ int main(int argc, char *argv[])
    PGMData *data3 = &pgm_max;
 
    readFile(data_path, data1);
-   puts("[+] Finished Reading PGM for Minimum-Filter!");
-
    minimumFilter(data1, atoi(N));
    writeFile(min_path, data1);
    puts("[+] Finished Minimum-Filter-Processing!");
 
    readFile(data_path, data2);
-   puts("[+] Finished Reading PGM for Median-Filter!");
-
    medianFilter(data2, atoi(N));
    writeFile(med_path, data2);
    puts("[+] Finished Median-Filter-Processing!");
 
    readFile(data_path, data3);
-   puts("[+] Finished Reading PGM for Maximum-Filter!");
-
    maximumFilter(data3, atoi(N));
    writeFile(max_path, data3);
    puts("[+] Finished Maximum-Filter-Processing!");

@@ -140,6 +140,7 @@ PGMData* blur(PGMData *data)
 
     float sum = 0;
 
+    // Initialisierung der geblurten Matrix
     float **blurred_matrix;
     blurred_matrix = mem_alloc(data->row, data->col);
     for (int i = 0; i < data->row; i++) {
@@ -157,7 +158,6 @@ PGMData* blur(PGMData *data)
                     sum = sum + data->pixel_matrix[i + k][j + l] * kernel[1 + k][1 + l];
                 }
             }
-
             blurred_matrix[i][j] = sum;
             if (blurred_matrix[i][j] < 0)
                 blurred_matrix[i][j] = 0;
@@ -166,12 +166,12 @@ PGMData* blur(PGMData *data)
         }
     }
 
+    // uebertrage die Werte der Matrix in die PGM
     for (int i = 0; i < data->row; i++) {
         for (int j = 0; j < data->col; j++ ) {
             data->pixel_matrix[i][j] = blurred_matrix[i][j];
         }
     }
-
     return data;
 }
 
@@ -188,6 +188,7 @@ PGMData* sharpen(PGMData *data)
 
     float sum = 0;
 
+    // Initialisierung
     float **sharpened_matrix;
     sharpened_matrix = mem_alloc(data->row, data->col);
     for (int i = 0; i < data->row; i++) {
@@ -213,6 +214,7 @@ PGMData* sharpen(PGMData *data)
         }
     }
 
+    // Werte in die PGM uebertragen
     for (int i = 0; i < data->row; ++i) {
         for (int j = 0; j < data->col; ++j) {
             data->pixel_matrix[i][j] = sharpened_matrix[i][j];
@@ -229,6 +231,7 @@ void minimumFilter(PGMData *data, int N)
 {
     float minval;
 
+    // Initialisierung
     float **minimum_filtered_matrix;
     minimum_filtered_matrix = mem_alloc(data->row, data->col);
     for (int i = 0; i < data->row; i++) {
@@ -247,6 +250,7 @@ void minimumFilter(PGMData *data, int N)
                 }
             }
             minimum_filtered_matrix[i][j] = minval;
+
             if (minimum_filtered_matrix[i][j] < 0)
                 minimum_filtered_matrix[i][j] = 0;
             else if (minimum_filtered_matrix[i][j] > 255)
@@ -254,6 +258,7 @@ void minimumFilter(PGMData *data, int N)
         }
     }
 
+    // Werte in die PGM uebertragen
     for (int i = 0; i < data->row; i++) {
         for (int j = 0; j < data->col; j++) {
             data->pixel_matrix[i][j] = minimum_filtered_matrix[i][j];
@@ -271,9 +276,11 @@ void medianFilter(PGMData *data, int N)
     int filter_size = N * N;
     float *ordered_list;
 
+    // Initialisiere die Listen
     unordered_list  = malloc(filter_size * sizeof(int));
     ordered_list    = malloc(filter_size * sizeof(int));
 
+    // Initialisiere die Matrix
     float **median_filtered_matrix;
     median_filtered_matrix = mem_alloc(data->row, data->col);
     for (int i = 0; i < data->row; i++) {
@@ -296,7 +303,9 @@ void medianFilter(PGMData *data, int N)
             counter = 0;
             for (int m = 0; m < filter_size; m++) {
                 float minval = unordered_list[0];
+
                 for (int n = 0; n < filter_size; n++) {
+                    // 555 wurde einfach zufaellig ausgewaehlt und dient zum filtern
                     if (unordered_list[n] == 555)
                         continue;
                     if (unordered_list[n] < minval) {
@@ -307,8 +316,8 @@ void medianFilter(PGMData *data, int N)
                 ordered_list[counter] = minval;
                 counter++;
             }
-
             median_filtered_matrix[i][j] = ordered_list[filter_size / 2 + 1];
+
             if (median_filtered_matrix[i][j] < 0)
                 median_filtered_matrix[i][j] = 0;
             else if (median_filtered_matrix[i][j] > 255)
@@ -330,6 +339,7 @@ void maximumFilter(PGMData *data, int N)
 {
     float maxval;
 
+    // Initialisiere die Matrix
     float **maximum_filtered_matrix;
     maximum_filtered_matrix = mem_alloc(data->row, data->col);
     for (int i = 0; i < data->row; i++) {
@@ -348,6 +358,7 @@ void maximumFilter(PGMData *data, int N)
                 }
             }
             maximum_filtered_matrix[i][j] = maxval;
+
             if (maximum_filtered_matrix[i][j] < 0)
                 maximum_filtered_matrix[i][j] = 0;
             else if (maximum_filtered_matrix[i][j] > 255)
@@ -363,13 +374,18 @@ void maximumFilter(PGMData *data, int N)
 }
 
 /**
- *  Sobel-Operation + Kantenstaerke-Operation
+ *  Sobel in x-Richtung
  */
-PGMData* sobel(PGMData *data)
+PGMData* sobelX(PGMData *data)
 {
     float valX = 0;
-    float valY = 0;
+    int kernel[3][3] = {
+            { 1,   0,  -1},
+            { 2,   0,  -2},
+            { 1,   0,  -1}
+    };
 
+    // Initialisierung der Matrix
     float **sobel_filtered_matrix;
     sobel_filtered_matrix = mem_alloc(data->row, data->col);
     for (int i = 0; i < data->row; i++) {
@@ -378,24 +394,103 @@ PGMData* sobel(PGMData *data)
         }
     }
 
-    // sobel
+    // Sobel-Prozess
     for (int i = 1; i < data->row - 1; i++) {
         for (int j = 1; j < data->col - 1; j++) {
-            valX = (data->pixel_matrix[i-1][j+1]+2 * data->pixel_matrix[i][j+1] + data->pixel_matrix[i+1][j+1]) -
-                   (data->pixel_matrix[i-1][j-1]+2 * data->pixel_matrix[i][j-1] + data->pixel_matrix[i+1][j-1]);
-
-            valY = (data->pixel_matrix[i+1][j-1]+2 * data->pixel_matrix[i+1][j] + data->pixel_matrix[i+1][j+1]) -
-                   (data->pixel_matrix[i-1][j-1]+2 * data->pixel_matrix[i-1][j] + data->pixel_matrix[i-1][j+1]);
-
-            // magnitude + normalization
-            sobel_filtered_matrix[i][j] = 255 * sqrtf((valX * valX) + (valY * valY)) / 950;
-
+            valX = 0;
+            for (int k = -1; k <= 1; k++) {
+                for (int l = -1; l <= 1; l++) {
+                    valX += data->pixel_matrix[i+k][j+l] * kernel[1+k][1+l];
+                }
+            }
+            sobel_filtered_matrix[i][j] = valX;
         }
     }
 
+    // weise die Werte der Operation der PGM zu
     for (int i = 0; i < data->row; i++) {
         for (int j = 0; j < data->col; j++) {
             data->pixel_matrix[i][j] = sobel_filtered_matrix[i][j];
+        }
+    }
+
+    return data;
+}
+
+/**
+ *  Sobel in y-Richtung
+ */
+PGMData* sobelY(PGMData *data)
+{
+    float valY = 0;
+    int kernel[3][3] = {
+            {  1,    2,    1},
+            {  0,    0,    0},
+            { -1,   -2,   -1}
+    };
+
+    // Initialisierung der Matrix
+    float **sobel_filtered_matrix;
+    sobel_filtered_matrix = mem_alloc(data->row, data->col);
+    for (int i = 0; i < data->row; i++) {
+        for (int j = 0; j < data->col; j++) {
+            sobel_filtered_matrix[i][j] = 0;
+        }
+    }
+
+    // Sobel-Prozess
+    for (int i = 1; i < data->row - 1; i++) {
+        for (int j = 1; j < data->col - 1; j++) {
+            valY = 0;
+            for (int k = -1; k <= 1; k++) {
+                for (int l = -1; l <= 1; l++) {
+                    valY += data->pixel_matrix[i+k][j+l] * kernel[1+k][1+l];
+                }
+            }
+            sobel_filtered_matrix[i][j] = valY;
+        }
+    }
+
+    // weise die Werte der Operation der PGM zu
+    for (int i = 0; i < data->row; i++) {
+        for (int j = 0; j < data->col; j++) {
+            data->pixel_matrix[i][j] = sobel_filtered_matrix[i][j];
+        }
+    }
+
+    return data;
+}
+
+/**
+ *  Ermittlung der Kantenstaerken
+ */
+PGMData* magFilter(PGMData* sobelx, PGMData* sobely, PGMData* data)
+{
+    // Initialisiere die Matrix
+    float **magFilteredMatrix;
+    magFilteredMatrix = mem_alloc(data->row, data->col);
+    for (int i = 0; i < data->row; i++) {
+        for (int j = 0; j < data->col; j++) {
+            magFilteredMatrix[i][j] = 0;
+        }
+    }
+
+    // berechne die Funktion
+    for (int i = 0; i < data->row; ++i) {
+        for (int j = 0; j < sobelx->col; ++j) {
+
+            float gx = sobelx->pixel_matrix[i][j];
+            float gy = sobely->pixel_matrix[i][j];
+
+            float magnitude = sqrtf((gx * gx) + (gy * gy));
+            magFilteredMatrix[i][j] = magnitude;
+        }
+    }
+
+    // weise die Werte der Operation der PGM zu
+    for (int i = 0; i < data->row; ++i) {
+        for (int j = 0; j < data->col; ++j) {
+            data->pixel_matrix[i][j] = magFilteredMatrix[i][j];
         }
     }
 
@@ -407,42 +502,105 @@ PGMData* sobel(PGMData *data)
  */
 PGMData* threshFilter(PGMData* data)
 {
-    for (int i = 0; i < data->row; ++i) {
-        for (int j = 0; j < data->col; ++j) {
-            if (data->pixel_matrix[i][j] < 40)
+    for (int i = 0; i < data->row; i++) {
+        for (int j = 0; j < data->col; j++) {
+            if (data->pixel_matrix[i][j] < 130)
                 data->pixel_matrix[i][j] = 0;
-            else if (data->pixel_matrix[i][j] > 255)
-                data->pixel_matrix[i][j] = 255;
         }
     }
     return data;
 }
 
-/**
- *  Richtung der Kanten
- */
-PGMData* directionFilter(PGMData* data)
+float** directions(PGMData* gy, PGMData* gx)
 {
-    float atan;
+    float** dir_matrix = mem_alloc(gy->row, gy->col);
+    for (int i = 0; i < gy->row; ++i) {
+        for (int j = 0; j < gy->col; ++j) {
+            dir_matrix[i][j] = 0;
+        }
+    }
 
-    float **direction_filtered_matrix;
-    direction_filtered_matrix = mem_alloc(data->row, data->col);
+    for (int i = 0; i < gy->row; ++i) {
+        for (int j = 0; j < gy->col; ++j) {
+            dir_matrix[i][j] = atanf(gy->pixel_matrix[i][j] / gx->pixel_matrix[i][j]);
+        }
+    }
+
+    return dir_matrix;
+}
+
+/**
+ *  non-maximum-suppression
+ */
+PGMData* NMS(PGMData* G_matrix, float** O_matrix)
+{
+    float **NMS_matrix = mem_alloc(G_matrix->row, G_matrix->col);
+    for (int i = 0; i < G_matrix->row; ++i) {
+        for (int j = 0; j < G_matrix->col; ++j) {
+            NMS_matrix[i][j] = 0;
+        }
+    }
+
+    // non-maximum suppression
+    for (int i = 1; i < G_matrix->row - 1; ++i) {
+        for (int j = 1; j < G_matrix->col - 1; ++j) {
+
+            float t = O_matrix[i][j];
+
+            if(t > 67.5 && t <= 90 || t >= -90 && t <= -67.5)
+            {
+                if (G_matrix->pixel_matrix[i - 1][j] > G_matrix->pixel_matrix[i][j]
+                    || G_matrix->pixel_matrix[i + 1][j] > G_matrix->pixel_matrix[i][j]) {
+                    NMS_matrix[i][j] = 0;
+                }
+                else NMS_matrix[i][j] = G_matrix->pixel_matrix[i][j];
+
+            }
+
+            if(t > -22.5 && t <= 22.5)
+            {
+                if (G_matrix->pixel_matrix[i][j - 1] > G_matrix->pixel_matrix[i][j]
+                    || G_matrix->pixel_matrix[i][j + 1] > G_matrix->pixel_matrix[i][j]) {
+                    NMS_matrix[i][j] = 0;
+                }
+                else NMS_matrix[i][j] = G_matrix->pixel_matrix[i][j];
+            }
+
+            if(t > 22.5 && t <= 67.5)
+            {
+                if (G_matrix->pixel_matrix[i - 1][j - 1] > G_matrix->pixel_matrix[i][j]
+                    || G_matrix->pixel_matrix[i + 1][j + 1] > G_matrix->pixel_matrix[i][j]) {
+                    NMS_matrix[i][j] = 0;
+                }
+                else NMS_matrix[i][j] = G_matrix->pixel_matrix[i][j];
+            }
+
+            if(t > 67.5 && t <= 90 || t >= -90 && t <= -67.5)
+            {
+                if (G_matrix->pixel_matrix[i - 1][j + 1] > G_matrix->pixel_matrix[i][j]
+                    || G_matrix->pixel_matrix[i + 1][j - 1] > G_matrix->pixel_matrix[i][j]) {
+                    NMS_matrix[i][j] = 0;
+                }
+                else NMS_matrix[i][j] = G_matrix->pixel_matrix[i][j];
+            }
+        }
+    }
+
+    for (int i = 0; i < G_matrix->row; ++i) {
+        for (int j = 0; j < G_matrix->col; ++j) {
+            G_matrix->pixel_matrix[i][j] = NMS_matrix[i][j];
+        }
+    }
+
+    return G_matrix;
+}
+
+PGMData* binaryPGM(PGMData* data)
+{
     for (int i = 0; i < data->row; i++) {
         for (int j = 0; j < data->col; j++) {
-            direction_filtered_matrix[i][j] = 0;
-        }
-    }
-
-    for (int i = 0; i < data->row; ++i) {
-        for (int j = 0; j < data->col; ++j) {
-            atan = atanf(data->pixel_matrix[i][j]);
-            direction_filtered_matrix[i][j] = atan;
-        }
-    }
-
-    for (int i = 0; i < data->row; ++i) {
-        for (int j = 0; j < data->col; ++j) {
-            data->pixel_matrix[i][j] = direction_filtered_matrix[i][j];
+            if (data->pixel_matrix[i][j] != 0)
+                data->pixel_matrix[i][j] = 1;
         }
     }
 
@@ -451,62 +609,3 @@ PGMData* directionFilter(PGMData* data)
     return data;
 }
 
-/**
- *  non-maximum-suppression
- */
-PGMData* NMS(PGMData* mag_matrix, float** dir_matrix)
-{
-    // Matrix erstellen
-    float **NMS_matrix = mem_alloc(mag_matrix->row, mag_matrix->col);
-    for (int i = 0; i < mag_matrix->row; ++i) {
-        for (int j = 0; j < mag_matrix->col; ++j) {
-            NMS_matrix[i][j] = 0;
-        }
-    }
-
-    // non-maximum suppression
-    for (int i = 1; i < mag_matrix->row - 1; ++i) {
-        for (int j = 1; j < mag_matrix->col - 1; ++j) {
-            float t = dir_matrix[i][j];
-            if(t > 67.5 && t <= 90 || t >= -90 && t <= -67.5) {
-                if (mag_matrix->pixel_matrix[i - 1][j] > mag_matrix->pixel_matrix[i][j]
-                    || mag_matrix->pixel_matrix[i + 1][j] > mag_matrix->pixel_matrix[i][j]) {
-                    NMS_matrix[i][j] = 0;
-                }
-                else NMS_matrix[i][j] = mag_matrix->pixel_matrix[i][j];
-
-            }
-            if(t > -22.5 && t <= 22.5) {
-                if (mag_matrix->pixel_matrix[i][j - 1] > mag_matrix->pixel_matrix[i][j]
-                    || mag_matrix->pixel_matrix[i][j + 1] > mag_matrix->pixel_matrix[i][j]) {
-                    NMS_matrix[i][j] = 0;
-                }
-                else NMS_matrix[i][j] = mag_matrix->pixel_matrix[i][j];
-            }
-            if(t > 22.5 && t <= 67.5) {
-                if (mag_matrix->pixel_matrix[i - 1][j - 1] > mag_matrix->pixel_matrix[i][j]
-                    || mag_matrix->pixel_matrix[i + 1][j + 1] > mag_matrix->pixel_matrix[i][j]) {
-                    NMS_matrix[i][j] = 0;
-                }
-                else NMS_matrix[i][j] = mag_matrix->pixel_matrix[i][j];
-            }
-            if(t > 67.5 && t <= 90 || t >= -90 && t <= -67.5) {
-                if (mag_matrix->pixel_matrix[i - 1][j + 1] > mag_matrix->pixel_matrix[i][j]
-                    || mag_matrix->pixel_matrix[i + 1][j - 1] > mag_matrix->pixel_matrix[i][j]) {
-                    NMS_matrix[i][j] = 0;
-                }
-                else NMS_matrix[i][j] = mag_matrix->pixel_matrix[i][j];
-            }
-        }
-    }
-
-    // G_matrix zu T_matrix aktualisieren
-    for (int i = 0; i < mag_matrix->row; ++i) {
-        for (int j = 0; j < mag_matrix->col; ++j) {
-            mag_matrix->pixel_matrix[i][j] = dir_matrix[i][j];
-        }
-    }
-
-    // G_matrix = T_matrix
-    return mag_matrix;
-}

@@ -38,10 +38,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/prox/Schreibtisch/Praktikum2
+CMAKE_SOURCE_DIR = /home/prox/Praktikum2_bck
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/prox/Schreibtisch/Praktikum2/build
+CMAKE_BINARY_DIR = /home/prox/Praktikum2_bck/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/p1.dir/depend.make
@@ -54,17 +54,17 @@ include CMakeFiles/p1.dir/flags.make
 
 CMakeFiles/p1.dir/src/p1.o: CMakeFiles/p1.dir/flags.make
 CMakeFiles/p1.dir/src/p1.o: ../src/p1.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/prox/Schreibtisch/Praktikum2/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/prox/Praktikum2_bck/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/p1.dir/src/p1.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/p1.dir/src/p1.o   -c /home/prox/Schreibtisch/Praktikum2/src/p1.c
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/p1.dir/src/p1.o   -c /home/prox/Praktikum2_bck/src/p1.c
 
 CMakeFiles/p1.dir/src/p1.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/p1.dir/src/p1.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/prox/Schreibtisch/Praktikum2/src/p1.c > CMakeFiles/p1.dir/src/p1.i
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/prox/Praktikum2_bck/src/p1.c > CMakeFiles/p1.dir/src/p1.i
 
 CMakeFiles/p1.dir/src/p1.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/p1.dir/src/p1.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/prox/Schreibtisch/Praktikum2/src/p1.c -o CMakeFiles/p1.dir/src/p1.s
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/prox/Praktikum2_bck/src/p1.c -o CMakeFiles/p1.dir/src/p1.s
 
 CMakeFiles/p1.dir/src/p1.o.requires:
 .PHONY : CMakeFiles/p1.dir/src/p1.o.requires
@@ -77,17 +77,17 @@ CMakeFiles/p1.dir/src/p1.o.provides.build: CMakeFiles/p1.dir/src/p1.o
 
 CMakeFiles/p1.dir/src/pgm.o: CMakeFiles/p1.dir/flags.make
 CMakeFiles/p1.dir/src/pgm.o: ../src/pgm.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/prox/Schreibtisch/Praktikum2/build/CMakeFiles $(CMAKE_PROGRESS_2)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/prox/Praktikum2_bck/build/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object CMakeFiles/p1.dir/src/pgm.o"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/p1.dir/src/pgm.o   -c /home/prox/Schreibtisch/Praktikum2/src/pgm.c
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/p1.dir/src/pgm.o   -c /home/prox/Praktikum2_bck/src/pgm.c
 
 CMakeFiles/p1.dir/src/pgm.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/p1.dir/src/pgm.i"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/prox/Schreibtisch/Praktikum2/src/pgm.c > CMakeFiles/p1.dir/src/pgm.i
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /home/prox/Praktikum2_bck/src/pgm.c > CMakeFiles/p1.dir/src/pgm.i
 
 CMakeFiles/p1.dir/src/pgm.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/p1.dir/src/pgm.s"
-	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/prox/Schreibtisch/Praktikum2/src/pgm.c -o CMakeFiles/p1.dir/src/pgm.s
+	/usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /home/prox/Praktikum2_bck/src/pgm.c -o CMakeFiles/p1.dir/src/pgm.s
 
 CMakeFiles/p1.dir/src/pgm.o.requires:
 .PHONY : CMakeFiles/p1.dir/src/pgm.o.requires
@@ -126,6 +126,6 @@ CMakeFiles/p1.dir/clean:
 .PHONY : CMakeFiles/p1.dir/clean
 
 CMakeFiles/p1.dir/depend:
-	cd /home/prox/Schreibtisch/Praktikum2/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/prox/Schreibtisch/Praktikum2 /home/prox/Schreibtisch/Praktikum2 /home/prox/Schreibtisch/Praktikum2/build /home/prox/Schreibtisch/Praktikum2/build /home/prox/Schreibtisch/Praktikum2/build/CMakeFiles/p1.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/prox/Praktikum2_bck/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/prox/Praktikum2_bck /home/prox/Praktikum2_bck /home/prox/Praktikum2_bck/build /home/prox/Praktikum2_bck/build /home/prox/Praktikum2_bck/build/CMakeFiles/p1.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/p1.dir/depend
 

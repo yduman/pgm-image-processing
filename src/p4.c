@@ -20,36 +20,37 @@ int main(int argc, char *argv[])
 {
    printf("P4\n");
 
-   PGMData pgm_data;
-   PGMData *data = &pgm_data;
+   PGMData pgm_data, pgm_data2, magnitude_output;
+   PGMData* data = &pgm_data;
+   PGMData* data2 = &pgm_data2;
+   PGMData* mag_out = &magnitude_output;
 
-   // Read PGM
-   PGMData *read = readFile(argv[1], data);
-   puts("[+] Finished Reading PGM!");
-
-   // Blur PGM
+   PGMData* read = readFile(argv[1], data);
    PGMData* blurred = blur(read);
-   puts("[+] Finished Blurring PGM!");
+   puts("[+] Finished Blurring!");
 
-   // Sobel PGM
-   PGMData* gx = sobel(blurred);
-   puts("[+] Finished Sobel-Processing!");
+   PGMData* gx = sobelX(blurred);
+   puts("[+] Finished Sobel_X!");
 
-   // Threshold
-   PGMData* thresh = threshFilter(gx);
-   puts("[+] Finished Threshold-Processing!");
+   PGMData* read2 = readFile(argv[1], data2);
+   PGMData* blurred2 = blur(read2);
+   PGMData* gy = sobelY(blurred2);
+   puts("[+] Finished Sobel_Y!");
 
-   // Directions
-   PGMData* dir = directionFilter(thresh);
-   puts("[+] Finished Direction-Processing!");
+   PGMData* mag = readFile(argv[1], mag_out);
+   PGMData* magnitude = magFilter(gx, gy, mag);
+   puts("[+] Finished calculating magnitude of Edges!");
 
-   // NMS
-   PGMData* nms = NMS(thresh, dir->pixel_matrix);
-   puts("[+] Finished NMS-Processing");
+   PGMData* thresh = threshFilter(magnitude);
+   puts("[+] Finished Thresholding!");
 
-   // Write PGM
-   writeFile(argv[2], nms);
-   puts("[+] Finished Writing PGM!");
+   PGMData* nms = NMS(thresh, directions(gy, gx));
+   puts("[+] Finished NMS!");
 
+   PGMData* bin = binaryPGM(nms);
+   puts("[+] Finished binary PGM!");
+
+   writeFile(argv[2], bin);
+   puts("[+] Finished Canny-Edge-Detection!");
    return 0;
 }

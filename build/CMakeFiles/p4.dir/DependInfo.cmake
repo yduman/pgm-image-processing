@@ -4,8 +4,8 @@ SET(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_C
-  "/home/prox/Schreibtisch/Praktikum2/src/p4.c" "/home/prox/Schreibtisch/Praktikum2/build/CMakeFiles/p4.dir/src/p4.o"
-  "/home/prox/Schreibtisch/Praktikum2/src/pgm.c" "/home/prox/Schreibtisch/Praktikum2/build/CMakeFiles/p4.dir/src/pgm.o"
+  "/home/prox/Praktikum2_bck/src/p4.c" "/home/prox/Praktikum2_bck/build/CMakeFiles/p4.dir/src/p4.o"
+  "/home/prox/Praktikum2_bck/src/pgm.c" "/home/prox/Praktikum2_bck/build/CMakeFiles/p4.dir/src/pgm.o"
   )
 SET(CMAKE_C_COMPILER_ID "GNU")
 

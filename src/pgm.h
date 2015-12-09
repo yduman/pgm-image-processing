@@ -25,9 +25,11 @@ void medianFilter(PGMData *data, int N);
 void maximumFilter(PGMData *data, int N);
 
 // P4
-PGMData* sobel(PGMData *data);
+PGMData* sobelX(PGMData *data);
+PGMData* sobelY(PGMData *data);
+PGMData* magFilter(PGMData* sobelx, PGMData* sobely, PGMData* data);
 PGMData* threshFilter(PGMData* data);
-PGMData* directionFilter(PGMData* data);
-PGMData* NMS(PGMData* mag_matrix, float** dir_matrix);
-
+float** directions(PGMData* gy, PGMData* gx);
+PGMData* NMS(PGMData* G_matrix, float** O_matrix);
+PGMData* binaryPGM(PGMData* data);
 #endif //PRAKTIKUM2_PGM_H
