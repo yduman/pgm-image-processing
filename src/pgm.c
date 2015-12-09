@@ -331,19 +331,6 @@ void maximumFilter(PGMData *data, int N)
 
 PGMData* sobel(PGMData *data)
 {
-//    int sobelX[3][3] = {
-//            {1, 0, -1},
-//            {2, 0, -2},
-//            {1, 0, -1}
-//    };
-//
-//    int sobelY[3][3] = {
-//            {1, 2, 1},
-//            {0, 0, 0},
-//            {-1, -2, -1}
-//    };
-
-
     float valX = 0;
     float valY = 0;
 
@@ -365,6 +352,7 @@ PGMData* sobel(PGMData *data)
 
             // magnitude + normalization
             sobel_filtered_matrix[i][j] = 255 * sqrtf((valX * valX) + (valY * valY)) / 950;
+
         }
     }
 
@@ -381,12 +369,41 @@ PGMData* threshFilter(PGMData* data)
 {
     for (int i = 0; i < data->row; ++i) {
         for (int j = 0; j < data->col; ++j) {
-            if (data->pixel_matrix[i][j] < 0)
+            if (data->pixel_matrix[i][j] < 40)
                 data->pixel_matrix[i][j] = 0;
             else if (data->pixel_matrix[i][j] > 255)
                 data->pixel_matrix[i][j] = 255;
         }
     }
+    return data;
+}
+
+PGMData* directionFilter(PGMData* data)
+{
+    float val;
+
+    float **direction_filtered_matrix;
+    direction_filtered_matrix = mem_alloc(data->row, data->col);
+    for (int i = 0; i < data->row; i++) {
+        for (int j = 0; j < data->col; j++) {
+            direction_filtered_matrix[i][j] = 0;
+        }
+    }
+
+    for (int i = 0; i < data->row; ++i) {
+        for (int j = 0; j < data->col; ++j) {
+            val = atanf(data->pixel_matrix[i][j]);
+            direction_filtered_matrix[i][j] = val;
+        }
+    }
+
+    for (int i = 0; i < data->row; ++i) {
+        for (int j = 0; j < data->col; ++j) {
+            data->pixel_matrix[i][j] = direction_filtered_matrix[i][j];
+        }
+    }
+
+    data->max_greyscale = 1;
 
     return data;
 }
