@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
    printf("P4\n");
 
    PGMData pgm_data, pgm_data2, magnitude_output;
+
    PGMData* data = &pgm_data;
    PGMData* data2 = &pgm_data2;
    PGMData* mag_out = &magnitude_output;

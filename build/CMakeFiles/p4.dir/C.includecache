@@ -12,5 +12,17 @@ stdio.h
 pgm.h
 /home/prox/Praktikum2_bck/src/pgm.h
 
+/home/prox/Praktikum2_bck/src/pgm.c
+stdio.h
+-
+stdlib.h
+-
+ctype.h
+-
+math.h
+-
+pgm.h
+/home/prox/Praktikum2_bck/src/pgm.h
+
 /home/prox/Praktikum2_bck/src/pgm.h
 

@@ -12,8 +12,8 @@
 
 int main(int argc, char *argv[])
 {
-   const char *data_path = argv[1]; // source pgm
-   const char *dest_path = argv[2]; // export
+   const char *data_path = argv[1]; // source
+   const char *dest_path = argv[2]; // destination
 
    PGMData pgm_data;
    PGMData *data = &pgm_data;

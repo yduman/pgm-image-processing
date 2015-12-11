@@ -20,6 +20,7 @@ PGMData* blur(PGMData *data);
 PGMData* sharpen(PGMData *data);
 
 // P3
+void sort(float *array, int length);
 void minimumFilter(PGMData *data, int N);
 void medianFilter(PGMData *data, int N);
 void maximumFilter(PGMData *data, int N);

@@ -18,11 +18,11 @@ int main(int argc, char *argv[])
 {
    printf("P3\n");
 
-   const char *data_path = argv[1];
-   const char *N         = argv[2];
-   const char *min_path  = argv[3];
-   const char *med_path  = argv[4];
-   const char *max_path  = argv[5];
+   const char *data_path = argv[1]; // source pgm
+   const char *N         = argv[2]; // N fuer NxN-Matrix
+   const char *min_path  = argv[3]; // export Minimum-Filter
+   const char *med_path  = argv[4]; // export Median-Filter
+   const char *max_path  = argv[5]; // export Maximum-Filter
 
    PGMData pgm_min, pgm_med, pgm_max;
 

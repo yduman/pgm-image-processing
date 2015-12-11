@@ -107,12 +107,12 @@ void writeFile(const char *filename, const PGMData *data) {
         exit(EXIT_FAILURE);
     }
 
-    // write :: magic, breite_hoehe, max. graustufe
+    // schreibe magic, Breite & Hoehe, Maximale Graustufe
     fprintf(fp, "P2\n");
     fprintf(fp, "%d %d\n", data->col, data->row);
     fprintf(fp, "%d\n", data->max_greyscale);
 
-    // write :: matrix
+    // schreibe die Matrix
     for (int i = 0; i < data->row; i++) {
         for (int j = 0; j < data->col; j++) {
             fprintf(fp, "%d", (int)data->pixel_matrix[i][j]);
@@ -267,18 +267,32 @@ void minimumFilter(PGMData *data, int N)
 }
 
 /**
+ *  ein Sortieralgorithmus fuer den Medianfilter
+ */
+void sort(float *array, int length)
+{
+    for (int i = 0; i < length - 1; ++i) {
+        for (int j = 0; j < length - 1; ++j) {
+            if (array[j] > array[j + 1]) {
+                float tmp = array[j];
+                array[j] = array[j + 1];
+                array[j + 1] = tmp;
+            }
+        }
+    }
+}
+
+/**
  *  Median-Filter
  */
 void medianFilter(PGMData *data, int N)
 {
     int counter = 0;
-    float *unordered_list;
+    float *filter_list;
     int filter_size = N * N;
-    float *ordered_list;
 
     // Initialisiere die Listen
-    unordered_list  = malloc(filter_size * sizeof(int));
-    ordered_list    = malloc(filter_size * sizeof(int));
+    filter_list = malloc(filter_size * sizeof(int));
 
     // Initialisiere die Matrix
     float **median_filtered_matrix;
@@ -295,28 +309,14 @@ void medianFilter(PGMData *data, int N)
             counter = 0;
             for (int k = -N / 2; k <= N / 2; k++) {
                 for (int l = -N / 2; l <= N / 2; l++) {
-                    unordered_list[counter] = data->pixel_matrix[i + k][j + l];
+                    filter_list[counter] = data->pixel_matrix[i + k][j + l];
                     counter++;
                 }
             }
 
-            counter = 0;
-            for (int m = 0; m < filter_size; m++) {
-                float minval = unordered_list[0];
-
-                for (int n = 0; n < filter_size; n++) {
-                    // 555 wurde einfach zufaellig ausgewaehlt und dient zum filtern
-                    if (unordered_list[n] == 555)
-                        continue;
-                    if (unordered_list[n] < minval) {
-                        minval = unordered_list[n];
-                        unordered_list[n] = 555;
-                    }
-                }
-                ordered_list[counter] = minval;
-                counter++;
-            }
-            median_filtered_matrix[i][j] = ordered_list[filter_size / 2 + 1];
+            // sortiere die NxN Matrix und waehle den Medianwert aus
+            sort(filter_list, filter_size);
+            median_filtered_matrix[i][j] = filter_list[filter_size / 2 + 1];
 
             if (median_filtered_matrix[i][j] < 0)
                 median_filtered_matrix[i][j] = 0;
@@ -325,6 +325,7 @@ void medianFilter(PGMData *data, int N)
         }
     }
 
+    // uebertrage die Werte in die PGM
     for (int i = 0; i < data->row; ++i) {
         for (int j = 0; j < data->col; ++j) {
             data->pixel_matrix[i][j] = median_filtered_matrix[i][j];
@@ -366,6 +367,7 @@ void maximumFilter(PGMData *data, int N)
         }
     }
 
+    // uebertrage die Werte in die PGM
     for (int i = 0; i < data->row; i++) {
         for (int j = 0; j < data->col; j++) {
             data->pixel_matrix[i][j] = maximum_filtered_matrix[i][j];
@@ -513,6 +515,7 @@ PGMData* threshFilter(PGMData* data)
 
 float** directions(PGMData* gy, PGMData* gx)
 {
+    // Initialisierung der Matrix
     float** dir_matrix = mem_alloc(gy->row, gy->col);
     for (int i = 0; i < gy->row; ++i) {
         for (int j = 0; j < gy->col; ++j) {
@@ -520,6 +523,7 @@ float** directions(PGMData* gy, PGMData* gx)
         }
     }
 
+    // Berechnung des atan
     for (int i = 0; i < gy->row; ++i) {
         for (int j = 0; j < gy->col; ++j) {
             dir_matrix[i][j] = atanf(gy->pixel_matrix[i][j] / gx->pixel_matrix[i][j]);
@@ -534,6 +538,7 @@ float** directions(PGMData* gy, PGMData* gx)
  */
 PGMData* NMS(PGMData* G_matrix, float** O_matrix)
 {
+    // Initialisierung der Matrix
     float **NMS_matrix = mem_alloc(G_matrix->row, G_matrix->col);
     for (int i = 0; i < G_matrix->row; ++i) {
         for (int j = 0; j < G_matrix->col; ++j) {
@@ -586,6 +591,7 @@ PGMData* NMS(PGMData* G_matrix, float** O_matrix)
         }
     }
 
+
     for (int i = 0; i < G_matrix->row; ++i) {
         for (int j = 0; j < G_matrix->col; ++j) {
             G_matrix->pixel_matrix[i][j] = NMS_matrix[i][j];
@@ -595,6 +601,9 @@ PGMData* NMS(PGMData* G_matrix, float** O_matrix)
     return G_matrix;
 }
 
+/**
+ *  kreiere eine Binaermatrix
+ */
 PGMData* binaryPGM(PGMData* data)
 {
     for (int i = 0; i < data->row; i++) {
@@ -604,6 +613,7 @@ PGMData* binaryPGM(PGMData* data)
         }
     }
 
+    // Maximale Graustufe ist 1, da die Matrix nur aus 0 und 1 besteht
     data->max_greyscale = 1;
 
     return data;
