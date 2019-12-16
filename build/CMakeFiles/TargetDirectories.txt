@@ -1,4 +1,0 @@
-/home/prox/Praktikum2_bck/build/CMakeFiles/p1.dir
-/home/prox/Praktikum2_bck/build/CMakeFiles/p2.dir
-/home/prox/Praktikum2_bck/build/CMakeFiles/p3.dir
-/home/prox/Praktikum2_bck/build/CMakeFiles/p4.dir

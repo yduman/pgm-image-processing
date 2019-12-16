@@ -1,1 +1,0 @@
-/usr/bin/cc  -std=c11    CMakeFiles/p3.dir/src/p3.o CMakeFiles/p3.dir/src/pgm.o  -o ../bin/p3 -rdynamic -lm 

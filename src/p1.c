@@ -2,12 +2,8 @@
 #include "pgm.h"
 
 /**
- * Autoren: Yildiz Kasimay, Artjom Poljakow, Yadullah Duman
- * --------------------------------------------------------
- *
- * --> Das Einlesen und Schreiben von PGM-Dateien implementieren.
- * --> Beispiel fuer einen Aufruf: $ ./p1 src.pgm dst.pgm
- * --> D.h. die PGM-Datei src.pgm einlesen und als PGM in die Ausgabedatei dst.pgm exportieren
+ * Read and Write PGM files
+ * Example call: $ ./p1 source.pgm dist.pgm
  */
 
 int main(int argc, char *argv[])
@@ -24,4 +20,3 @@ int main(int argc, char *argv[])
    writeFile(dest_path, data);
    puts("[+] Finished Writing PGM!");
 }
-

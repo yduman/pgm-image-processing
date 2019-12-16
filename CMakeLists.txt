@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.4)
 
 set(EXECUTABLE_OUTPUT_PATH "../bin")
 
-project(Praktikum2)
+project(PGM_IMAGE_PROCESSING)
 
 if(NOT MSVC)
    set(CMAKE_C_FLAGS "-std=c11")
