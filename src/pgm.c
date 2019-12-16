@@ -564,7 +564,7 @@ PGMData *NMS(PGMData *G_matrix, float **O_matrix)
 
             float t = O_matrix[i][j];
 
-            if (t > 67.5 && t <= 90 || t >= -90 && t <= -67.5)
+            if ((t > 67.5 && t <= 90) || (t >= -90 && t <= -67.5))
             {
                 if (G_matrix->pixel_matrix[i - 1][j] > G_matrix->pixel_matrix[i][j] || G_matrix->pixel_matrix[i + 1][j] > G_matrix->pixel_matrix[i][j])
                 {
@@ -594,7 +594,7 @@ PGMData *NMS(PGMData *G_matrix, float **O_matrix)
                     NMS_matrix[i][j] = G_matrix->pixel_matrix[i][j];
             }
 
-            if (t > 67.5 && t <= 90 || t >= -90 && t <= -67.5)
+            if ((t > 67.5 && t <= 90) || (t >= -90 && t <= -67.5))
             {
                 if (G_matrix->pixel_matrix[i - 1][j + 1] > G_matrix->pixel_matrix[i][j] || G_matrix->pixel_matrix[i + 1][j - 1] > G_matrix->pixel_matrix[i][j])
                 {
