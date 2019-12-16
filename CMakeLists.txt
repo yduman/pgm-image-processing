@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.4)
 
-set(EXECUTABLE_OUTPUT_PATH "../bin")
+set(EXECUTABLE_OUTPUT_PATH "./out")
 
 project(PGM_IMAGE_PROCESSING)
 
